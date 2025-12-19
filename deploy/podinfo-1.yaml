@@ -1,0 +1,39 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  labels:
+    team: delivery
+  name: podinfo-1
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions:
+  - "missingkey=error"
+  generators:
+  - clusters:
+      selector:
+        matchLabels:
+          scope: internal
+  template:
+    metadata:
+      name: podinfo-1-{{ .name }}
+    spec:
+      destination:
+        name: "{{ .name }}"
+        namespace: podinfo
+      project: default
+      source:
+        path: .
+        repoURL: oci://ghcr.io/stefanprodan/charts/podinfo
+        targetRevision: 6.9.3
+      syncPolicy:
+        syncOptions:
+        - ApplyOutOfSyncOnly=true
+        - CreateNamespace=true
+        - Prune=true
+        - PruneLast=true
+        - PrunePropagationPolicy=foreground
+        - RespectIgnoreDifferences=true
+        - ServerSideApply=true
+        - Validate=true

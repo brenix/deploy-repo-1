@@ -5,7 +5,7 @@ metadata:
   labels:
     team: delivery
   name: podinfo-1
-  namespace: argocd
+  namespace: deploy-repo-1
 spec:
   goTemplate: true
   goTemplateOptions:
@@ -22,7 +22,7 @@ spec:
       destination:
         name: "{{ .name }}"
         namespace: podinfo
-      project: default
+      project: pnicholson-deploy-1
       source:
         path: .
         repoURL: oci://ghcr.io/stefanprodan/charts/podinfo
@@ -37,3 +37,6 @@ spec:
         - RespectIgnoreDifferences=true
         - ServerSideApply=true
         - Validate=true
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
